@@ -296,35 +296,6 @@ the software.
                     <version>3.5.1</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.codehaus.cargo</groupId>
-                    <artifactId>cargo-maven2-plugin</artifactId>
-                    <version>1.2.3</version>
-                    <configuration>
-                        <container>
-                            <containerId>tomcat7x</containerId>
-                            <zipUrlInstaller>
-                                <url>http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.25/bin/apache-tomcat-7.0.25.zip</url>
-                            </zipUrlInstaller>
-                        </container>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>start-cargo</id>
-                            <phase>pre-integration-test</phase>
-                            <goals>
-                                <goal>start</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>stop-cargo</id>
-                            <phase>post-integration-test</phase>
-                            <goals>
-                                <goal>stop</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>2.12</version>
@@ -1128,52 +1099,4 @@ the software.
         </pluginRepository>
     </pluginRepositories>
     
-    <profiles>
-        <!--  Localhost deployments -->
-        <profile>
-            <id>env-localhost</id>
-            <activation>
-                <property>
-                    <name>env</name>
-                    <value>localhost</value>
-                </property>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <!-- Same tomcat manager for every web app -->
-                <tomcat.manager.url>http://localhost:8080/manager/text</tomcat.manager.url>
-                <tomcat.server.id>TomcatServer</tomcat.server.id>
-            </properties>
-        </profile>
-        
-        <!-- QA fullstack deployments -->
-        <profile>
-            <id>qa-fullstack</id>
-            <activation>
-                <property>
-                    <name>env</name>
-                    <value>qa-fullstack</value>
-                </property>
-            </activation>
-            <properties>
-                <!-- tomcat.manager.url for each web app is defined in the pom for the web app -->
-                <tomcat.server.id>TomcatServer_Qa_Fullstack</tomcat.server.id>
-            </properties>
-        </profile>
-        <profile>
-            <id>qa-1</id>
-            <activation>
-                <property>
-                    <name>env</name>
-                    <value>qa-1</value>
-                </property>
-            </activation>
-            <properties>
-                <!-- tomcat.manager.url for each web app is defined in the pom for the web app -->
-                <tomcat.server.id>TomcatServer</tomcat.server.id>
-            </properties>
-        </profile>
-
-    </profiles>
-
 </project>
