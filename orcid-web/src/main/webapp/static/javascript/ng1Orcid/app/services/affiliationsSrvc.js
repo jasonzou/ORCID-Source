@@ -1,7 +1,9 @@
 angular.module('orcidApp').factory("affiliationsSrvc", ['$rootScope', '$timeout', function ($rootScope, $timeout) {
     var serv = {
+        distinctions_invited_positions: new Array(),
         educations: new Array(),
         employments: new Array(),
+        memberships_services: new Array(),       
         loading: false,
         affiliationsToAddIds: null,
         
@@ -16,13 +18,27 @@ angular.module('orcidApp').factory("affiliationsSrvc", ['$rootScope', '$timeout'
                     success: function(data) {
                         for (i in data) {
                             if (data[i].affiliationType != null && data[i].affiliationType.value != null
+                                    && data[i].affiliationType.value == 'distinction'){
+                                groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.distinctions_invited_positions);
+                            } else if (data[i].affiliationType != null && data[i].affiliationType.value != null
                                     && data[i].affiliationType.value == 'education'){
                                 groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.educations);
-                            }
-                            else if (data[i].affiliationType != null && data[i].affiliationType.value != null
+                            } else if (data[i].affiliationType != null && data[i].affiliationType.value != null
                                     && data[i].affiliationType.value == 'employment'){
                                 groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.employments);
-                            }
+                            } else if (data[i].affiliationType != null && data[i].affiliationType.value != null
+                                    && data[i].affiliationType.value == 'invited-position'){
+                                groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.distinctions_invited_positions);
+                            } else if (data[i].affiliationType != null && data[i].affiliationType.value != null
+                                    && data[i].affiliationType.value == 'membership'){
+                                groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.memberships_services);
+                            } else if (data[i].affiliationType != null && data[i].affiliationType.value != null
+                                    && data[i].affiliationType.value == 'qualification'){
+                                groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.educations);
+                            } else if (data[i].affiliationType != null && data[i].affiliationType.value != null
+                                    && data[i].affiliationType.value == 'service'){
+                                groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.memberships_services);
+                            } 
                         };
                         if (serv.affiliationsToAddIds.length == 0) {
                             $timeout(function() {
@@ -52,8 +68,10 @@ angular.module('orcidApp').factory("affiliationsSrvc", ['$rootScope', '$timeout'
             //clear out current affiliations
             serv.loading = true;
             serv.affiliationsToAddIds = null;
+            serv.distinctions_invited_positions.length = 0;
             serv.educations.length = 0;
             serv.employments.length = 0;
+            serv.memberships_services.length = 0;
             //get affiliation ids
             $.ajax({
                 url: getBaseUri() + '/' + path,
@@ -91,14 +109,24 @@ angular.module('orcidApp').factory("affiliationsSrvc", ['$rootScope', '$timeout'
         deleteAffiliation: function(affiliation) {
             var arr = null;
             var idx;
-            if (affiliation.affiliationType != null && affiliation.affiliationType.value != null
-                    && affiliation.affiliationType.value == 'education'){
-                arr = serv.educations;
-            }
-            if (affiliation.affiliationType != null && affiliation.affiliationType.value != null
-                    && affiliation.affiliationType.value == 'employment'){
-                arr = serv.employments;
-            }
+            if(affiliation.affiliationType != null && affiliation.affiliationType.value != null) {
+                if(affiliation.affiliationType.value == 'distinction') {
+                   arr = serv.distinctions_invited_positions; 
+                } else if (affiliation.affiliationType.value == 'education'){
+                    arr = serv.educations;
+                } else if (affiliation.affiliationType.value == 'employment'){
+                    arr = serv.employments;
+                } else if(affiliation.affiliationType.value == 'invited-position') {
+                    arr = serv.distinctions_invited_positions; 
+                } else if(affiliation.affiliationType.value == 'membership') {
+                    arr = serv.memberships_services;
+                } else if(affiliation.affiliationType.value == 'qualification') {
+                    arr = serv.educations;
+                } else if(affiliation.affiliationType.value == 'service') {
+                    arr = serv.memberships_services;
+                }
+            }                         
+            
             for (idx in arr) {
                 if (arr[idx].activePutCode == affiliation.putCode.value) {
                     break;
