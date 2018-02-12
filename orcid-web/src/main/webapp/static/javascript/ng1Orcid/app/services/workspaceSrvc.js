@@ -1,7 +1,10 @@
 angular.module('orcidApp').factory("workspaceSrvc", ['$rootScope', function ($rootScope) {
     var serv = {
         displayEducation: true,
+        displayEducationAndQualification: true,
         displayEmployment: true,
+        displayDistinctionAndInvitedPosition: true,
+        displayMembershipAndService: true,
         displayFunding: true,
         displayPersonalInfo: true,
         displayWorks: true,

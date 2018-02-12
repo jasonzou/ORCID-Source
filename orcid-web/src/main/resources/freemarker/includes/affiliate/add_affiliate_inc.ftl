@@ -26,6 +26,10 @@
                     <span ng-show="editAffiliation.putCode.value == null"><@orcid.msg 'manual_affiliation_form_contents.add_affiliation'/></span>
                     <span ng-show="editAffiliation.putCode.value != null"><@orcid.msg 'manual_affiliation_form_contents.edit_affiliation'/></span>
                 </h1>
+                <h1 ng-show="addAffType == 'distinction'" class="lightbox-title pull-left">
+                    <span ng-show="editAffiliation.putCode.value == null"><@orcid.msg 'manual_affiliation_form_contents.add_distinction'/></span>
+                    <span ng-show="editAffiliation.putCode.value != null"><@orcid.msg 'manual_affiliation_form_contents.edit_distinction'/></span>
+                </h1>
                 <h1 ng-show="addAffType == 'education'" class="lightbox-title pull-left">
                     <span ng-show="editAffiliation.putCode.value == null"><@orcid.msg 'manual_affiliation_form_contents.add_education'/></span>
                     <span ng-show="editAffiliation.putCode.value != null"><@orcid.msg 'manual_affiliation_form_contents.edit_education'/></span>
@@ -34,16 +38,30 @@
                     <span ng-show="editAffiliation.putCode.value == null"><@orcid.msg 'manual_affiliation_form_contents.add_employment'/></span>
                     <span ng-show="editAffiliation.putCode.value != null"><@orcid.msg 'manual_affiliation_form_contents.edit_employment'/></span>
                 </h1>
+                <h1 ng-show="addAffType == 'invited-position'" class="lightbox-title pull-left">
+                    <span ng-show="editAffiliation.putCode.value == null"><@orcid.msg 'manual_affiliation_form_contents.add_invited_position'/></span>
+                    <span ng-show="editAffiliation.putCode.value != null"><@orcid.msg 'manual_affiliation_form_contents.edit_invited_position'/></span>
+                </h1>
+                <h1 ng-show="addAffType == 'membership'" class="lightbox-title pull-left">
+                    <span ng-show="editAffiliation.putCode.value == null"><@orcid.msg 'manual_affiliation_form_contents.add_membership'/></span>
+                    <span ng-show="editAffiliation.putCode.value != null"><@orcid.msg 'manual_affiliation_form_contents.edit_membership'/></span>
+                </h1>
+                <h1 ng-show="addAffType == 'qualification'" class="lightbox-title pull-left">
+                    <span ng-show="editAffiliation.putCode.value == null"><@orcid.msg 'manual_affiliation_form_contents.add_qualification'/></span>
+                    <span ng-show="editAffiliation.putCode.value != null"><@orcid.msg 'manual_affiliation_form_contents.edit_qualification'/></span>
+                </h1>
+                <h1 ng-show="addAffType == 'service'" class="lightbox-title pull-left">
+                    <span ng-show="editAffiliation.putCode.value == null"><@orcid.msg 'manual_affiliation_form_contents.add_service'/></span>
+                    <span ng-show="editAffiliation.putCode.value != null"><@orcid.msg 'manual_affiliation_form_contents.edit_service'/></span>
+                </h1>
             </div>
         </div>
 
         <div class="row">
-			
-
 			<!-- Left Column -->
             <div class="col-md-6 col-sm-6 col-xs-12">
 				<div class="form-group" ng-show="editAffiliation.disambiguatedAffiliationSourceId">
-                    <span ng-show="addAffType == 'education'">
+					<span ng-show="addAffType == 'distinction' || addAffType == 'education' || addAffType == 'invited-position' || addAffType == 'membership' || addAffType == 'qualification' || addAffType == 'service'">
                        <label><@orcid.msg 'manual_affiliation_form_contents.labelinstitution'/></label>
                     </span>
                     <span ng-show="addAffType == 'employment'">
@@ -65,7 +83,7 @@
 
 				<!-- Institution -->
                 <div class="form-group">
-                    <span ng-show="addAffType == 'education'">
+                    <span ng-show="addAffType == 'distinction' || addAffType == 'education' || addAffType == 'invited-position' || addAffType == 'membership' || addAffType == 'qualification' || addAffType == 'service'">
                        <label ng-hide="disambiguatedAffiliation"><@orcid.msg 'manual_affiliation_form_contents.labelinstitution'/></label>
                        <label ng-show="disambiguatedAffiliation"><@orcid.msg 'manual_affiliation_form_contents.labeldisplayinstitution'/></label>
 						<span class="required" ng-class="isValidClass(editAffiliation.affiliationName)">*</span>
@@ -127,7 +145,6 @@
                     </div>
                 </div>
             </div>
-            
 
 			<!-- Right Column -->
 			<div class="col-md-6 col-sm-6 col-xs-12">

@@ -1,6 +1,7 @@
 angular.module('orcidApp').factory("affiliationsSrvc", ['$rootScope', '$timeout', function ($rootScope, $timeout) {
     var serv = {
         distinctions_invited_positions: new Array(),
+        educations_qualifications: new Array(),
         educations: new Array(),
         employments: new Array(),
         memberships_services: new Array(),       
@@ -22,7 +23,9 @@ angular.module('orcidApp').factory("affiliationsSrvc", ['$rootScope', '$timeout'
                                 groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.distinctions_invited_positions);
                             } else if (data[i].affiliationType != null && data[i].affiliationType.value != null
                                     && data[i].affiliationType.value == 'education'){
-                                groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.educations);
+                                groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.educations_qualifications);
+                                //TODO: Remove when new aff types are live
+                                groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.educations);                                
                             } else if (data[i].affiliationType != null && data[i].affiliationType.value != null
                                     && data[i].affiliationType.value == 'employment'){
                                 groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.employments);
@@ -34,6 +37,8 @@ angular.module('orcidApp').factory("affiliationsSrvc", ['$rootScope', '$timeout'
                                 groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.memberships_services);
                             } else if (data[i].affiliationType != null && data[i].affiliationType.value != null
                                     && data[i].affiliationType.value == 'qualification'){
+                                groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.educations_qualifications);
+                                //TODO: Remove when new aff types are live
                                 groupedActivitiesUtil.group(data[i],GroupedActivities.AFFILIATION,serv.educations);
                             } else if (data[i].affiliationType != null && data[i].affiliationType.value != null
                                     && data[i].affiliationType.value == 'service'){
@@ -69,6 +74,7 @@ angular.module('orcidApp').factory("affiliationsSrvc", ['$rootScope', '$timeout'
             serv.loading = true;
             serv.affiliationsToAddIds = null;
             serv.distinctions_invited_positions.length = 0;
+            serv.educations_qualifications.length = 0;
             serv.educations.length = 0;
             serv.employments.length = 0;
             serv.memberships_services.length = 0;
@@ -108,12 +114,14 @@ angular.module('orcidApp').factory("affiliationsSrvc", ['$rootScope', '$timeout'
         },
         deleteAffiliation: function(affiliation) {
             var arr = null;
+            var tempArr = null;
             var idx;
             if(affiliation.affiliationType != null && affiliation.affiliationType.value != null) {
                 if(affiliation.affiliationType.value == 'distinction') {
                    arr = serv.distinctions_invited_positions; 
                 } else if (affiliation.affiliationType.value == 'education'){
-                    arr = serv.educations;
+                    arr = serv.educations_qualifications;
+                    tempArr = serv.educations;
                 } else if (affiliation.affiliationType.value == 'employment'){
                     arr = serv.employments;
                 } else if(affiliation.affiliationType.value == 'invited-position') {
@@ -121,7 +129,8 @@ angular.module('orcidApp').factory("affiliationsSrvc", ['$rootScope', '$timeout'
                 } else if(affiliation.affiliationType.value == 'membership') {
                     arr = serv.memberships_services;
                 } else if(affiliation.affiliationType.value == 'qualification') {
-                    arr = serv.educations;
+                    arr = serv.educations_qualifications;
+                    tempArr = serv.educations;
                 } else if(affiliation.affiliationType.value == 'service') {
                     arr = serv.memberships_services;
                 }
@@ -132,7 +141,20 @@ angular.module('orcidApp').factory("affiliationsSrvc", ['$rootScope', '$timeout'
                     break;
                 }
             }
+            
             arr.splice(idx, 1);
+            
+            //TODO: Remove this section when new aff types are live
+            if(tempArr != null) {
+                for (tempIdx in tempArr) {
+                    if (tempArr[tempIdx].activePutCode == affiliation.putCode.value) {
+                        break;
+                    }
+                }
+            }
+            tempArr.splice(tempIdx, 1);
+            //-------------------------------------------------------
+            
             $.ajax({
                 url: getBaseUri() + '/affiliations/affiliations.json',
                 type: 'DELETE',
